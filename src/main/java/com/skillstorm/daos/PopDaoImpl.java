@@ -23,7 +23,7 @@ public class PopDaoImpl implements PopDao{
 			LinkedList<Pop> pops = new LinkedList<>();
 			
 			while(rs.next()) {
-				Pop pop = new Pop(rs.getInt("PopId"), rs.getString("Name"), rs.getInt("Quantity"), rs.getDouble("Cost"), rs.getString("Series"), rs.getString("Status"));
+				Pop pop = new Pop(rs.getInt("pop_id"), rs.getString("pop_name"));
 				pops.add(pop);
 			}
 			return pops;
@@ -36,7 +36,16 @@ public class PopDaoImpl implements PopDao{
 
 	@Override
 	public Pop findById(int id) {
-		// TODO Auto-generated method stub
+		String sql = "SELECT * FROM pop WHERE pop_id = " + id;
+		try(Connection conn = PopWarehouseCreds.getInstance().getConnection()){
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			if(rs.next()) {
+				return new Pop(rs.getInt(1), rs.getString(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

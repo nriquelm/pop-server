@@ -3,8 +3,6 @@ package com.skillstorm.servlets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +16,7 @@ import com.skillstorm.models.NotFound;
 import com.skillstorm.models.Pop;
 import com.skillstorm.services.URLParserService;
 
-@WebServlet(urlPatterns = "/pops")
+@WebServlet(urlPatterns = "/pops/*")
 public class PopServlet extends HttpServlet {
 
 	

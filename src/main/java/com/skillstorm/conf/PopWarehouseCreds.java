@@ -17,6 +17,7 @@ public class PopWarehouseCreds {
 	private PopWarehouseCreds() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
+			
 			try (InputStream input = PopWarehouseCreds.class.getClassLoader().getResourceAsStream("application.properties")){
 				Properties props = new Properties();
 				props.load(input);
@@ -24,9 +25,11 @@ public class PopWarehouseCreds {
 				this.url = props.getProperty("db.url");
 				this.username = props.getProperty("db.username");
 				this.password = props.getProperty("password");
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			
