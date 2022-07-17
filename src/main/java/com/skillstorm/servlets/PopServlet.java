@@ -10,12 +10,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skillstorm.daos.PopDao;
+import com.skillstorm.daos.PopDaoImpl;
 import com.skillstorm.models.Pop;
+import com.skillstorm.services.URLParserService;
 
-@WebServlet(urlPatterns = "/pop")
+@WebServlet(urlPatterns = "/pops/*")
 public class PopServlet extends HttpServlet {
 
+	
+	@Override
+	public void init() throws ServletException {
+		System.out.println("PopServlet Created");
+		super.init();
+	}
+	
+	@Override
+	public void destroy(){
+		System.out.println("PopServlet Destroyed");
+		super.destroy();
+	}
+	
+	
 	private static final long serialVersionUID = 6545584803189140545L;
+	PopDao dao = new PopDaoImpl();
+	ObjectMapper mapper = new ObjectMapper();
+	URLParserService urlService = new URLParserService();
 	
 	private CopyOnWriteArrayList<Pop> popList = new CopyOnWriteArrayList<>();
 	
@@ -24,8 +44,7 @@ public class PopServlet extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(popList);
 		resp.getWriter().print(json);
-		resp.setContentType("");
-		resp.setStatus(201);
+		resp.setContentType("application/json");
 	}
 	
 	@Override

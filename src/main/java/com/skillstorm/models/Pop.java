@@ -61,6 +61,15 @@ public class Pop {
 		this.status = status;
 	}
 	
+	//toString method
+	@Override
+	public String toString() {
+		return "Pop [id=" + id + ", name=" + name + ", quantity=" + quantity + ", cost=" + cost + ", series=" + series
+				+ ", status=" + status + "]";
+	}
+	
+	
+	
 	
 
 }
