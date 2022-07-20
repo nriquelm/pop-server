@@ -60,7 +60,8 @@ public class PopDaoImpl implements PopDao{
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			
+			if(rs.next()) {
 				return new Pop(rs.getInt("pop_id"), rs.getString("pop_name"), rs.getInt("quantity"), rs.getDouble("cost"), rs.getString("pop_series"), rs.getString("pop_status"));
 			}
 		} catch (SQLException e) {
@@ -71,7 +72,7 @@ public class PopDaoImpl implements PopDao{
 
 	@Override
 	public Pop save(Pop pop) {
-		String sql = "INSERT INTO pop (pop_id, pop_name, quantity, cost, pop-series, pop-status) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO pop (pop_id, pop_name, quantity, cost, pop_series, pop_status) VALUES (?, ?, ?, ?, ?, ?)";
 		try(Connection conn = creds.getConnection()){
 			conn.setAutoCommit(false);
 			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -104,7 +105,6 @@ public class PopDaoImpl implements PopDao{
 
 	@Override
 	public void delete(Pop pop){
-		String sql = "DELETE FROM pop WHERE id = ?";
 		
 	}
 

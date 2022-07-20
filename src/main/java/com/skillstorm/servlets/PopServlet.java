@@ -44,58 +44,72 @@ public class PopServlet extends HttpServlet {
 	private static final long serialVersionUID = 6545584803189140545L;
 	PopDao dao = new PopDaoImpl();
 	ObjectMapper mapper = new ObjectMapper();
-	URLParserService urlService = new URLParserService();
+	//URLParserService urlService = new URLParserService();
 	
-	//private CopyOnWriteArrayList<Pop> popList = new CopyOnWriteArrayList<>();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		ObjectMapper mapper = new ObjectMapper();
-//		String json = mapper.writeValueAsString(popList);
-//		resp.getWriter().print(json);
-//		resp.setContentType("application/json");
 		
+
+		String path = req.getPathInfo();
+		String[] splitString = path.split("/");
+		String input = splitString[1];
 		try {
-			int id = urlService.extractIdFromURL(req.getPathInfo());
+			
+//			int id = urlService.extractIdFromURL(req.getPathInfo());
+//			Pop pop = dao.findById(id);
+//			if(pop != null) {
+//				resp.setContentType("application/json");
+//				resp.getWriter().print(mapper.writeValueAsString(pop));
+//			}else {
+//				resp.setStatus(404);
+//				resp.getWriter().print(mapper.writeValueAsString(new NotFound("No pop with the provided ID was found")));
+//			}
+			int id = Integer.parseInt(input);
 			Pop pop = dao.findById(id);
+		
 			if(pop != null) {
 				resp.setContentType("application/json");
 				resp.getWriter().print(mapper.writeValueAsString(pop));
-			}else {
-				resp.setStatus(404);
-				resp.getWriter().print(mapper.writeValueAsString(new NotFound("No pop with the provided ID was found")));
+			} else {
+				resp.setContentType("application/json");
+				resp.getWriter().print(mapper.writeValueAsString("No pop found at this ID"));
 			}
+
+		} catch (NumberFormatException e) {
+//			List<Pop> pops = dao.findAll();
+//			System.out.println(pops);
+//			resp.setContentType("application/json");
+//			resp.getWriter().print(mapper.writeValueAsString(pops));
 			
-		} catch (Exception e) {
+			Pop pop = dao.findByName(input);
+			resp.setContentType("application/json");
+			resp.getWriter().print(mapper.writeValueAsString(pop));
+			
+		} catch (NullPointerException e) {
 			List<Pop> pops = dao.findAll();
-			System.out.println(pops);
 			resp.setContentType("application/json");
 			resp.getWriter().print(mapper.writeValueAsString(pops));
 		}
-		
-
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		ObjectMapper mapper = new ObjectMapper();
-//		Pop pop = mapper.readValue(req.getInputStream(), Pop.class);
-//		popList.add(pop);
-//		resp.setStatus(201);
-//		System.out.println("CREATED POP!");
 		
 		InputStream reqBody = req.getInputStream();
 		Pop newPop = mapper.readValue(reqBody, Pop.class);
+		dao.save(newPop);
+		System.out.println("Pop has been added");
 		
-		newPop = dao.save(newPop);
-		if(newPop != null) {
-			resp.setContentType("application/json");
-			resp.getWriter().print(mapper.writeValueAsString(newPop));
-			resp.setStatus(201);
-		} else {
-			resp.setStatus(400);
-			resp.getWriter().print(mapper.writeValueAsString(new NotFound("Unable to create artist")));
-		}
+//		newPop = dao.save(newPop);
+//		if(newPop != null) {
+//			resp.setContentType("application/json");
+//			resp.getWriter().print(mapper.writeValueAsString(newPop));
+//			resp.setStatus(201);
+//		} else {
+//			resp.setStatus(400);
+//			resp.getWriter().print(mapper.writeValueAsString(new NotFound("Unable to add pop")));
+//		}
 		 
 	}
 
