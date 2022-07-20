@@ -11,7 +11,7 @@ public interface PopDao {
 	public Pop findByName(String name);
 	
 	public Pop save(Pop pop);
-	public boolean updatePrice(Pop pop);
+	public void updatePrice(double cost, int id);
 	public void deleteByName(String name);
 	public void delete(int id);
 
