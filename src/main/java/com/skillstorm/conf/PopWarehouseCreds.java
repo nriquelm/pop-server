@@ -24,7 +24,7 @@ public class PopWarehouseCreds {
 				
 				this.url = props.getProperty("db.url");
 				this.username = props.getProperty("db.username");
-				this.password = props.getProperty("password");
+				this.password = props.getProperty("db.password");
 				
 			} catch (IOException e) {
 				e.printStackTrace();

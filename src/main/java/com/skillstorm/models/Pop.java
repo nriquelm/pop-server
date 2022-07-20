@@ -14,9 +14,13 @@ public class Pop {
 	public Pop() {
 		
 	}
-	public Pop(int id, String name) {
+	public Pop(int id, String name, int quantity, double cost, String series, String status) {
 		this.id = id;
 		this.name = name;
+		this.quantity = quantity;
+		this.cost = cost;
+		this.series = series;
+		this.status = status;
 	}
 	
 	//getters and setters

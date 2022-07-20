@@ -3,6 +3,8 @@ package com.skillstorm.servlets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +18,7 @@ import com.skillstorm.models.NotFound;
 import com.skillstorm.models.Pop;
 import com.skillstorm.services.URLParserService;
 
-@WebServlet(urlPatterns = "/pops/*")
+@WebServlet(name = "PopServlet", urlPatterns = "/pops/*")
 public class PopServlet extends HttpServlet {
 
 	
@@ -30,6 +32,12 @@ public class PopServlet extends HttpServlet {
 	public void destroy(){
 		System.out.println("PopServlet Destroyed");
 		super.destroy();
+	}
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException {
+		System.out.println("Servicing");
+		super.service(req,  resp);
 	}
 	
 	
@@ -64,6 +72,8 @@ public class PopServlet extends HttpServlet {
 			resp.setContentType("application/json");
 			resp.getWriter().print(mapper.writeValueAsString(pops));
 		}
+		
+
 	}
 	
 	@Override
