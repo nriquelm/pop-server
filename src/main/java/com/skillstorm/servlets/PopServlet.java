@@ -100,17 +100,19 @@ public class PopServlet extends HttpServlet {
 		Pop newPop = mapper.readValue(reqBody, Pop.class);
 		dao.save(newPop);
 		System.out.println("Pop has been added");
-		
-//		newPop = dao.save(newPop);
-//		if(newPop != null) {
-//			resp.setContentType("application/json");
-//			resp.getWriter().print(mapper.writeValueAsString(newPop));
-//			resp.setStatus(201);
-//		} else {
-//			resp.setStatus(400);
-//			resp.getWriter().print(mapper.writeValueAsString(new NotFound("Unable to add pop")));
-//		}
 		 
+	}
+	
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		String path = req.getPathInfo();
+		String[] splitString = path.split("/");
+		String input = splitString[1];
+		try {
+			int id = Integer.parseInt(input);
+			dao.delete(id);
+		}catch (NumberFormatException e) {
+			resp.getWriter().print(mapper.writeValueAsString("Pop Not Found"));
+		}
 	}
 
 }

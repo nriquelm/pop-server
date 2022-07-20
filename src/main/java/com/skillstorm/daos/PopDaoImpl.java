@@ -110,7 +110,15 @@ public class PopDaoImpl implements PopDao{
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
+		String sql = "DELETE FROM pop WHERE pop_id = ?";
+		try (Connection conn = creds.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			int numRowsDeleted = ps.executeUpdate();
+			System.out.println(numRowsDeleted);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
