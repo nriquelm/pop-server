@@ -97,21 +97,38 @@ public class PopDaoImpl implements PopDao{
 	}
 
 	@Override
-	public void updatePrice(Pop pop) {
+	public boolean updatePrice(Pop pop) {
 		String sql = "UPDATE pop SET cost = ? WHERE pop_id = ?";
 		try (Connection conn = creds.getConnection()){
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int numRowsUpdated = ps.executeUpdate();
-			System.out.println(numRowsUpdated);
+			ps.setDouble(1, pop.getCost());
+			ps.setInt(2, pop.getId());
+			if(numRowsUpdated == 1) {
+				conn.commit();
+				return true;
+			}else {
+				conn.rollback();
+				return false;
+			}
 		}catch (SQLException e){
 			e.printStackTrace();
 		}
+		return false;
 		
 	}
 
 	@Override
-	public void delete(Pop pop){
-		
+	public void deleteByName(String name){
+		String sql = "DELETE FROM pop WHERE pop_name = ?";
+		try (Connection conn = creds.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			int numRowsDeleted = ps.executeUpdate();
+			System.out.println(numRowsDeleted);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

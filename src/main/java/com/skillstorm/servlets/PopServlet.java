@@ -3,8 +3,6 @@ package com.skillstorm.servlets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,9 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skillstorm.daos.PopDao;
 import com.skillstorm.daos.PopDaoImpl;
-import com.skillstorm.models.NotFound;
 import com.skillstorm.models.Pop;
-import com.skillstorm.services.URLParserService;
 
 @WebServlet(name = "PopServlet", urlPatterns = "/pops/*")
 public class PopServlet extends HttpServlet {
@@ -44,7 +40,6 @@ public class PopServlet extends HttpServlet {
 	private static final long serialVersionUID = 6545584803189140545L;
 	PopDao dao = new PopDaoImpl();
 	ObjectMapper mapper = new ObjectMapper();
-	//URLParserService urlService = new URLParserService();
 	
 	
 	@Override
@@ -56,15 +51,6 @@ public class PopServlet extends HttpServlet {
 		String input = splitString[1];
 		try {
 			
-//			int id = urlService.extractIdFromURL(req.getPathInfo());
-//			Pop pop = dao.findById(id);
-//			if(pop != null) {
-//				resp.setContentType("application/json");
-//				resp.getWriter().print(mapper.writeValueAsString(pop));
-//			}else {
-//				resp.setStatus(404);
-//				resp.getWriter().print(mapper.writeValueAsString(new NotFound("No pop with the provided ID was found")));
-//			}
 			int id = Integer.parseInt(input);
 			Pop pop = dao.findById(id);
 		
@@ -77,19 +63,17 @@ public class PopServlet extends HttpServlet {
 			}
 
 		} catch (NumberFormatException e) {
-//			List<Pop> pops = dao.findAll();
-//			System.out.println(pops);
-//			resp.setContentType("application/json");
-//			resp.getWriter().print(mapper.writeValueAsString(pops));
 			
 			Pop pop = dao.findByName(input);
 			resp.setContentType("application/json");
 			resp.getWriter().print(mapper.writeValueAsString(pop));
 			
 		} catch (NullPointerException e) {
+			
 			List<Pop> pops = dao.findAll();
 			resp.setContentType("application/json");
 			resp.getWriter().print(mapper.writeValueAsString(pops));
+			
 		}
 	}
 	
@@ -103,6 +87,20 @@ public class PopServlet extends HttpServlet {
 		 
 	}
 	
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		InputStream reqBody = req.getInputStream();
+		Pop pop = mapper.readValue(reqBody, Pop.class);
+		boolean updated = dao.updatePrice(pop);
+		
+		if(updated) {
+			resp.setContentType("application/json");
+			resp.getWriter().print(mapper.writeValueAsString("Pop has been updated"));
+			resp.setStatus(201);
+		}else {
+			resp.getWriter().print(mapper.writeValueAsString("Pop could not be updated"));
+		}
+	}
 	
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -113,7 +111,8 @@ public class PopServlet extends HttpServlet {
 			int id = Integer.parseInt(input);
 			dao.delete(id);
 		}catch (NumberFormatException e) {
-			resp.getWriter().print(mapper.writeValueAsString("Pop Not Found"));
+			//resp.getWriter().print(mapper.writeValueAsString("Pop Not Found"));
+			dao.deleteByName(input);
 		}
 	}
 
