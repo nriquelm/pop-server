@@ -85,7 +85,6 @@ public class PopDaoImpl implements PopDao{
 			
 			int rowsAffected = ps.executeUpdate();
 			if(rowsAffected != 0) {
-				//ResultSet keys = ps.getGeneratedKeys();
 				conn.commit();
 				return pop;
 			}else {
@@ -99,7 +98,14 @@ public class PopDaoImpl implements PopDao{
 
 	@Override
 	public void updatePrice(Pop pop) {
-		// TODO Auto-generated method stub
+		String sql = "UPDATE pop SET cost = ? WHERE pop_id = ?";
+		try (Connection conn = creds.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int numRowsUpdated = ps.executeUpdate();
+			System.out.println(numRowsUpdated);
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -122,11 +128,6 @@ public class PopDaoImpl implements PopDao{
 		
 	}
 
-	@Override
-	public void deleteMany(int[] ids) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	private static Pop mapRowToPop(ResultSet rs) {
 		

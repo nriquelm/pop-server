@@ -14,6 +14,5 @@ public interface PopDao {
 	public void updatePrice(Pop pop);
 	public void delete(Pop pop);
 	public void delete(int id);
-	public void deleteMany(int[] ids);
 
 }
