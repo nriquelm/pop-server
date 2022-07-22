@@ -118,8 +118,6 @@ public class PopServlet extends HttpServlet {
 			dao.delete(id);
 			
 		} catch (NumberFormatException e) {
-			
-			// resp.getWriter().print(mapper.writeValueAsString("Pop Not Found"));
 			dao.deleteByName(input);
 			
 		}
